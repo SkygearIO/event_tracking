@@ -1,0 +1,55 @@
+version: '2'
+
+volumes:
+  db_data:
+    driver: local
+  app_data:
+    driver: local
+
+services:
+
+  db:
+    image: mdillon/postgis:9.5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  skygear-server:
+    image: quay.io/skygeario/skygear-server:v0.21.1
+    ports:
+      - "3000:3000"
+    volumes:
+      - app_data:/app/data
+    depends_on:
+      - db
+    command: skygear-server --http
+    environment:
+      DATABASE_URL: postgresql://postgres:@db/postgres?sslmode=disable
+      API_KEY: et
+      MASTER_KEY: et
+      APP_NAME: et
+      TOKEN_STORE: jwt
+      TOKEN_STORE_SECRET: et
+      ASSET_STORE: fs
+      ASSET_STORE_URL_PREFIX: http://localhost:3000/files
+      ASSET_STORE_PUBLIC: 'YES'
+      PLUGINS: PYTHON
+      PYTHON_TRANSPORT: http
+      PYTHON_PATH: http://plugin:8000
+
+  plugin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: py-skygear --http plugin.py
+    volumes:
+      - .:/usr/src/app
+    environment:
+      DATABASE_URL: postgresql://postgres:@db/postgres?sslmode=disable
+      API_KEY: et
+      MASTER_KEY: et
+      APP_NAME: et
+      PUBSUB_URL: ws://skygear-server:3000/pubsub
+      SKYGEAR_ADDRESS: tcp://skygear-server:5555
+      SKYGEAR_ENDPOINT: http://skygear-server:3000

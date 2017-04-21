@@ -1,0 +1,13 @@
+language: python
+python:
+  - '3.5'
+cache:
+  directories:
+    - $HOME/.cache/pip
+before_install:
+  - pip install --upgrade pip
+  - pip install pylama
+  - pip install lizard
+script:
+  - pylama skygear_event_tracking
+  - lizard -w skygear_event_tracking
