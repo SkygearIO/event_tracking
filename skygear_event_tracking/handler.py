@@ -2,8 +2,18 @@ from skygear.utils.db import _get_engine
 import os
 import posixpath
 import skygear
-
+import json
+import logging
 from .writer import Writer
+
+
+logger = logging.getLogger(__name__)
+
+
+class EventTrackingRequest(object):
+    def __init__(self, ips, events):
+        self.ips = ips
+        self.events = events
 
 
 class Handler(object):
@@ -11,7 +21,22 @@ class Handler(object):
         self._writer = writer
 
     def __call__(self, request):
-        return skygear.Response(status=250)
+        # extract useful http headers
+        ips = request.headers.get('x-forwarded-for')
+
+        # parse body
+        bytes = request.get_data()
+        json_str = bytes.decode('utf-8')
+        parsed = json.loads(json_str)
+
+        events = parsed['events']
+        event_tracking_request = EventTrackingRequest(
+            ips,
+            events,
+        )
+        logger.debug('event_tracking_request: %s', event_tracking_request)
+
+        return skygear.Response(status=200)
 
 
 def register_handler(
