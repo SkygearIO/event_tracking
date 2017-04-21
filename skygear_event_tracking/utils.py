@@ -1,4 +1,5 @@
 import re
+import datetime
 
 
 def sanitize_for_db(some_str):
@@ -12,3 +13,8 @@ def sanitize_for_db(some_str):
     if d[0:1].isdigit():
         d = '_' + d
     return d
+
+
+def parse_rfc3339(some_str):
+    dt = datetime.datetime.strptime(some_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return dt
