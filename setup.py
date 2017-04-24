@@ -9,4 +9,5 @@ setup(
         'SQLAlchemy>=1.0.0',
         'alembic>=0.8.0',
     ],
+    test_suite='skygear_event_tracking.tests',
 )
