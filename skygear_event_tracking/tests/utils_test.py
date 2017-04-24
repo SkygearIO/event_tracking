@@ -7,6 +7,7 @@ from ..utils import (
     sanitize_for_db,
 )
 
+
 class UtilsTest(unittest.TestCase):
     def test_sanitize_for_db(self):
         cases = [

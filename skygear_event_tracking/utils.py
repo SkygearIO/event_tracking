@@ -27,7 +27,7 @@ def parse_datetime_from_dict(some_dict):
             return None
         date_str = some_dict['$date']
         return parse_rfc3339(date_str)
-    except:
+    except Exception:
         return None
 
 
