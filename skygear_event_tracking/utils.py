@@ -18,3 +18,14 @@ def sanitize_for_db(some_str):
 def parse_rfc3339(some_str):
     dt = datetime.datetime.strptime(some_str, '%Y-%m-%dT%H:%M:%S.%fZ')
     return dt
+
+
+def parse_datetime_from_dict(some_dict):
+    try:
+        type_ = some_dict['$type']
+        if type_ != 'date':
+            return None
+        date_str = some_dict['$date']
+        return parse_rfc3339(date_str)
+    except:
+        return None
