@@ -29,3 +29,42 @@ def parse_datetime_from_dict(some_dict):
         return parse_rfc3339(date_str)
     except:
         return None
+
+
+class SingleEvent(object):
+    '''
+    Represent a single event
+    It is intended to be constructed by the web request handler
+    and used by db writer
+    '''
+    def __init__(self, event_id, received_at, json_dict):
+        self._event_raw = json_dict['_event_raw']
+        self.event_norm = sanitize_for_db(self._event_raw)
+
+        self.attributes = {}
+        for key in json_dict:
+            sanitized_key = sanitize_for_db(key)
+            value = json_dict[key]
+            if value is None:
+                continue
+            if isinstance(value, str):
+                self.attributes[sanitized_key] = value
+            elif isinstance(value, int):
+                self.attributes[sanitized_key] = float(value)
+            elif isinstance(value, float):
+                self.attributes[sanitized_key] = value
+            elif isinstance(value, bool):
+                self.attributes[sanitized_key] = value
+            elif isinstance(value, dict):
+                maybe_datetime = parse_datetime_from_dict(value)
+                if maybe_datetime:
+                    self.attributes[sanitized_key] = maybe_datetime
+
+        # inject _event_norm
+        self.attributes['_event_norm'] = self.event_norm
+
+        # inject _id
+        self.attributes['_id'] = event_id
+
+        # inject _received_at
+        self.attributes['_received_at'] = received_at

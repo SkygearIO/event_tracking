@@ -1,6 +1,7 @@
 import unittest
 import datetime
 from ..utils import (
+    SingleEvent,
     parse_datetime_from_dict,
     parse_rfc3339,
     sanitize_for_db,
@@ -47,3 +48,45 @@ class UtilsTest(unittest.TestCase):
         input_ = {}
         actual = parse_datetime_from_dict(input_)
         self.assertEqual(None, actual)
+
+    def test_single_event_constructor(self):
+        event_id = 'abc'
+        received_at = datetime.datetime.utcnow()
+        json_dict = {
+            '_event_raw': 'Posted an item for sale',
+            'simple_str': 'simple_str',
+            'simple_int': 1,
+            'simple_float': 1.5,
+            'complex_date': {
+                '$type': 'date',
+                '$date': '2017-01-23T01:23:45.006789Z',
+            },
+        }
+        actual = SingleEvent(
+            event_id=event_id,
+            received_at=received_at,
+            json_dict=json_dict,
+        )
+
+        # should inject _event_norm
+        self.assertTrue('_event_norm' in actual.attributes)
+        self.assertEqual(actual.attributes['_event_norm'], actual.event_norm)
+
+        # should inject _id
+        self.assertEqual(actual.attributes['_id'], event_id)
+
+        # should handle str
+        self.assertEqual(actual.attributes['simple_str'], 'simple_str')
+
+        # should convert int to float
+        self.assertEqual(actual.attributes['simple_int'], 1.0)
+        self.assertTrue(isinstance(actual.attributes['simple_int'], float))
+
+        # should handle float
+        self.assertEqual(actual.attributes['simple_float'], 1.5)
+
+        # should handle date
+        self.assertTrue(isinstance(
+            actual.attributes['complex_date'],
+            datetime.datetime
+        ))
