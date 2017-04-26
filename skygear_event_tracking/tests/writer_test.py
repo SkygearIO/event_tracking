@@ -3,10 +3,12 @@ import unittest
 from sqlalchemy import (
     Column,
     MetaData,
-    TEXT,
     Table,
 )
-from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
+from sqlalchemy.dialects.postgresql import (
+    DOUBLE_PRECISION,
+    TEXT,
+)
 from ..writer import compute_columns_to_add, Writer
 
 

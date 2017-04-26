@@ -1,13 +1,16 @@
 import datetime
 from sqlalchemy import (
-    BOOLEAN,
     Column,
     MetaData,
-    TEXT,
     Table,
 )
 from sqlalchemy.exc import NoSuchTableError
-from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION, TIMESTAMP
+from sqlalchemy.dialects.postgresql import (
+    BOOLEAN,
+    DOUBLE_PRECISION,
+    TIMESTAMP,
+    TEXT,
+)
 from alembic.migration import MigrationContext
 from alembic.operations import Operations
 import threading
