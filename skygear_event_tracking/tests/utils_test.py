@@ -13,7 +13,7 @@ class UtilsTest(unittest.TestCase):
         cases = [
             ('Click & Press', 'click_press'),
             ('100% good', '_100_good'),
-            ('_use_underscore_in_event_NAME', 'use_underscore_in_event_name'),
+            ('_use_underscore_in_event_NAME', '_use_underscore_in_event_name'),
         ]
         for input_, expected in cases:
             actual = sanitize_for_db(input_)

@@ -8,8 +8,7 @@ def sanitize_for_db(some_str):
     '''
     a = re.sub(r'[^a-zA-Z0-9]', '_', some_str)
     b = re.sub(r'_+', '_', a)
-    c = b.strip('_')
-    d = c.lower()
+    d = b.lower()
     if d[0:1].isdigit():
         d = '_' + d
     return d
