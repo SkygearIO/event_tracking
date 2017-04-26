@@ -46,6 +46,7 @@ services:
     volumes:
       - .:/usr/src/app
     environment:
+      LOG_LEVEL: DEBUG
       DATABASE_URL: postgresql://postgres:@db/postgres?sslmode=disable
       API_KEY: et
       MASTER_KEY: et
