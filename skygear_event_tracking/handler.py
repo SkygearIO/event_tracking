@@ -5,15 +5,10 @@ import skygear
 import json
 import logging
 from .writer import Writer
+from .utils import EventTrackingRequest
 
 
 logger = logging.getLogger(__name__)
-
-
-class EventTrackingRequest(object):
-    def __init__(self, ips, events):
-        self.ips = ips
-        self.events = events
 
 
 class Handler(object):
@@ -31,8 +26,8 @@ class Handler(object):
 
         events = parsed['events']
         event_tracking_request = EventTrackingRequest(
-            ips,
-            events,
+            http_header_ips=ips,
+            json_events=events,
         )
         logger.debug('event_tracking_request: %s', event_tracking_request)
 

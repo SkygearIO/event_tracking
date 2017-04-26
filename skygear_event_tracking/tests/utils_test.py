@@ -1,6 +1,7 @@
 import unittest
 import datetime
 from ..utils import (
+    EventTrackingRequest,
     SingleEvent,
     parse_datetime_from_dict,
     parse_rfc3339,
@@ -91,3 +92,20 @@ class UtilsTest(unittest.TestCase):
             actual.attributes['complex_date'],
             datetime.datetime
         ))
+
+    def test_event_tracking_request_constructor(self):
+        json_events = [
+            {
+                '_event_raw': 'Event A',
+            },
+            {
+                '_event_raw': 'Event B',
+            },
+        ]
+        actual = EventTrackingRequest(
+            http_header_ips='0.0.0.0',
+            json_events=json_events,
+        )
+        for single_event in actual.events:
+            self.assertTrue(isinstance(single_event, SingleEvent))
+            self.assertEqual('0.0.0.0', single_event.attributes['_ips'])
