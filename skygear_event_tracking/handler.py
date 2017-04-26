@@ -30,7 +30,7 @@ class Handler(object):
             json_events=events,
         )
         logger.debug('event_tracking_request: %s', event_tracking_request)
-
+        self._writer.process_request(event_tracking_request)
         return skygear.Response(status=200)
 
 
