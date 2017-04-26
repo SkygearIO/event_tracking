@@ -68,11 +68,11 @@ class SingleEvent(object):
                 continue
             if isinstance(value, str):
                 self.attributes[sanitized_key] = value
+            elif isinstance(value, bool):
+                self.attributes[sanitized_key] = value
             elif isinstance(value, int):
                 self.attributes[sanitized_key] = float(value)
             elif isinstance(value, float):
-                self.attributes[sanitized_key] = value
-            elif isinstance(value, bool):
                 self.attributes[sanitized_key] = value
             elif isinstance(value, dict):
                 maybe_datetime = parse_datetime_from_dict(value)

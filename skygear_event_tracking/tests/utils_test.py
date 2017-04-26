@@ -59,6 +59,7 @@ class UtilsTest(unittest.TestCase):
             'simple_str': 'simple_str',
             'simple_int': 1,
             'simple_float': 1.5,
+            'simple_bool': True,
             'complex_date': {
                 '$type': 'date',
                 '$date': '2017-01-23T01:23:45.006789Z',
@@ -86,6 +87,9 @@ class UtilsTest(unittest.TestCase):
 
         # should handle float
         self.assertEqual(actual.attributes['simple_float'], 1.5)
+
+        # should handle bool
+        self.assertTrue(actual.attributes['simple_bool'], True)
 
         # should handle date
         self.assertTrue(isinstance(
