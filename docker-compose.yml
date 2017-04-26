@@ -23,7 +23,7 @@ services:
       - app_data:/app/data
     depends_on:
       - db
-    command: skygear-server --http
+    command: skygear-server
     environment:
       DATABASE_URL: postgresql://postgres:@db/postgres?sslmode=disable
       API_KEY: et
@@ -35,14 +35,14 @@ services:
       ASSET_STORE_URL_PREFIX: http://localhost:3000/files
       ASSET_STORE_PUBLIC: 'YES'
       PLUGINS: PYTHON
-      PYTHON_TRANSPORT: http
-      PYTHON_PATH: http://plugin:8000
+      PYTHON_TRANSPORT: zmq
+      PYTHON_ARGS: tcp://*:5555
 
   plugin:
     build:
       context: .
       dockerfile: Dockerfile
-    command: py-skygear --http plugin.py
+    command: py-skygear plugin.py
     volumes:
       - .:/usr/src/app
     environment:
