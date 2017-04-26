@@ -75,6 +75,15 @@ class Writer(object):
         self._schema = schema
         self._table_prefix = table_prefix
 
+    def _make_alembic_op(self, conn):
+        '''
+        Return an instance Operations which is used to
+        generate DDL statement
+        '''
+        migration_ctx = MigrationContext.configure(conn)
+        op = Operations(migration_ctx)
+        return op
+
     def _compute_quantified_table_name(self, event_norm):
         full_table_name = self._table_prefix + event_norm
         quantified_table_name = self._schema + '.' + full_table_name
