@@ -74,3 +74,8 @@ class Writer(object):
         self._engine = engine
         self._schema = schema
         self._table_prefix = table_prefix
+
+    def _compute_quantified_table_name(self, event_norm):
+        full_table_name = self._table_prefix + event_norm
+        quantified_table_name = self._schema + '.' + full_table_name
+        return quantified_table_name

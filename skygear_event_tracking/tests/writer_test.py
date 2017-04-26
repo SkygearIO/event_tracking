@@ -7,7 +7,7 @@ from sqlalchemy import (
     Table,
 )
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
-from ..writer import compute_columns_to_add
+from ..writer import compute_columns_to_add, Writer
 
 
 class WriterTest(unittest.TestCase):
@@ -36,6 +36,12 @@ class WriterTest(unittest.TestCase):
             ['some_bool', 'some_datetime'],
             actual,
         )
+
+    def test_compute_quantified_table_name(self):
+        input_ = 'posted_an_item_for_sale'
+        writer = Writer(engine=None, schema='s', table_prefix='et_')
+        actual = writer._compute_quantified_table_name(input_)
+        self.assertEqual('s.et_posted_an_item_for_sale', actual)
 
     def _make_table(self, table_name, *cols):
         metadata = MetaData()
