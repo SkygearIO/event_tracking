@@ -41,6 +41,27 @@ def register_handler(
     db_schema=None,
     db_connection_uri=None,
 ):
+    '''
+    Register a skygear handler to receive events
+
+    :param endpoint_mount_path: the path that the handler should mount.
+        If you change this, you must also change the corresponding config
+        in client.
+
+    :param db_table_prefix: the prefix that will be prepended to the table
+        name. Set this to an empty string to disable prefixing.
+
+    :param db_schema: the schema that the tables should reside in. If the
+        value is None, the schema is derived from the environment variable
+        'APP_NAME'.
+
+    :param db_connection_uri: the connection uri of the underlying database.
+        It must be a standard postgresql uri. If the value is None, the uri
+        is derived from the environment variable 'DATABASE_URL'
+
+    :returns: the callable handler. Normally you do not need care about this
+        value.
+    '''
     if db_connection_uri is None:
         engine = _get_engine()
     else:
