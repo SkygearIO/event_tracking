@@ -6,10 +6,29 @@ from ..utils import (
     parse_datetime_from_dict,
     parse_rfc3339,
     sanitize_for_db,
+    compare_column_name,
 )
 
 
 class UtilsTest(unittest.TestCase):
+    def test_compare_column_name(self):
+        cases = [
+            ('_id', '_ips', -1),
+            ('_sent_at', '_id', 1),
+            ('_id', '_id', 0),
+
+            ('_id', 'some_str', -1),
+            ('some_str', '_id', 1),
+            ('some_str', 'some_str', 0),
+
+            ('a', 'b', -1),
+            ('a', 'a', 0),
+            ('b', 'a', 1),
+        ]
+        for lhs, rhs, expected in cases:
+            actual = compare_column_name(lhs, rhs)
+            self.assertEqual(actual, expected)
+
     def test_sanitize_for_db(self):
         cases = [
             ('Click & Press', 'click_press'),

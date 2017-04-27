@@ -1,6 +1,92 @@
 import re
 import datetime
 import uuid
+from functools import cmp_to_key
+
+
+# The order of elements in this list is important.
+# It defines the desired sort order of preserved columns.
+_PREVERSED_COLUMNS = [
+    # common columns
+    '_id',
+    '_event_norm',
+    '_event_raw',
+    '_user_id',
+    '_tracked_at',
+    '_sent_at',
+    '_received_at',
+    '_ips',
+
+    # web specific columns
+    '_user_agent',
+    '_page_url',
+    '_page_path',
+    '_page_search',
+    '_page_referrer',
+    '_utm_campaign',
+    '_utm_channel',
+
+    # mobile specific columns
+    '_app_id',
+    '_app_version',
+    '_app_build_number',
+    '_device_id',
+    '_device_manufacturer',
+    '_device_model',
+    '_device_os',
+    '_device_os_version',
+    '_device_carrier',
+    '_device_locales',
+    '_device_locale',
+    '_device_timezone',
+]
+
+
+def _list_index_of(list_, item):
+    try:
+        return list_.index(item)
+    except ValueError:
+        return -1
+
+
+def _str_compare(lhs, rhs):
+    if lhs == rhs:
+        return 0
+    if lhs < rhs:
+        return -1
+    return 1
+
+
+def compare_column_name(lhs, rhs):
+    i = _list_index_of(_PREVERSED_COLUMNS, lhs)
+    j = _list_index_of(_PREVERSED_COLUMNS, rhs)
+    if i < 0:
+        if j < 0:
+            # both of them are not preserved
+            return _str_compare(lhs, rhs)
+        else:
+            # rhs is preserved
+            return 1
+    else:
+        if j < 0:
+            # lhs is preserved
+            return -1
+        else:
+            # both of them are preserved
+            diff = i - j
+            if diff == 0:
+                return 0
+            if diff < 0:
+                return -1
+            return 1
+
+
+def compare_column(lhs, rhs):
+    return compare_column_name(lhs.name, rhs.name)
+
+
+def sort_columns(columns):
+    return sorted(columns, key=cmp_to_key(compare_column))
 
 
 def sanitize_for_db(some_str):
