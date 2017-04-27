@@ -15,6 +15,7 @@ from alembic.migration import MigrationContext
 from alembic.operations import Operations
 import threading
 import logging
+from .utils import sort_columns
 
 logger = logging.getLogger(__name__)
 
@@ -181,6 +182,7 @@ class Writer(object):
                 op = self._make_alembic_op(conn)
                 table = self._get_cached_table(conn, event.event_norm)
                 columns = compute_columns_to_add(table, event.attributes)
+                columns = sort_columns(columns)
                 if len(columns) > 0:
                     if table is None:
                         table = self._create_table(
