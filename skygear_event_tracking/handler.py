@@ -1,4 +1,5 @@
 from skygear.utils.db import _get_engine
+from sqlalchemy import create_engine
 import os
 import posixpath
 import skygear
@@ -40,8 +41,10 @@ def register_handler(
     db_schema=None,
     db_connection_uri=None,
 ):
-    # TODO: support db_connection_uri
-    engine = _get_engine()
+    if db_connection_uri is None:
+        engine = _get_engine()
+    else:
+        engine = create_engine(db_connection_uri)
 
     if db_schema is None:
         app_name = os.environ['APP_NAME']
