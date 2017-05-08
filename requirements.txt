@@ -2,3 +2,4 @@ alembic==0.9.1
 skygear==0.21.0
 SQLAlchemy==1.1.9
 pyzmq==14.7.0
+requests==2.13.0
