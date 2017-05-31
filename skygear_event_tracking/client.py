@@ -128,7 +128,7 @@ class Client(object):
     def _cleanup(self):
         self._running = False
         try:
-            self._worker.join
+            self._worker.join()
         except RuntimeError:
             pass
 
