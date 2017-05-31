@@ -147,3 +147,8 @@ class Client(object):
             event['_user_id'] = user_id
 
         return self._enqueue(event)
+
+    def flush(self):
+        if not self._running:
+            return
+        self._queue.join()
